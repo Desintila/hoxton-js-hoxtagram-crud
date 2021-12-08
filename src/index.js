@@ -17,6 +17,7 @@ function renderImages() {
             deletePost(post.id)
             render()
         })
+
         const h2El = document.createElement('h2')
         h2El.setAttribute('class', 'title')
         h2El.textContent = post.title
@@ -36,6 +37,7 @@ function renderImages() {
             updateLikes(post)
             render()
         })
+
         const ulEl = document.createElement('ul')
         ulEl.setAttribute('class', 'comments')
         for (const comment of post.comments) {
@@ -44,14 +46,15 @@ function renderImages() {
             const deleteBtn = document.createElement('button')
             deleteBtn.textContent = 'X'
             deleteBtn.addEventListener('click', function () {
-                state.posts = state.posts.filter(function (id) {
-                    return id !== comment.id
+                post.comments = post.comments.filter(function (Comment) {
+                    return Comment.id !== comment.id
                 })
                 deleteComments(comment.id)
                 render()
             })
             liEl.append(deleteBtn)
             ulEl.append(liEl)
+
         }
         const formEl = document.createElement('form')
         formEl.setAttribute('class', 'comment-form')
@@ -68,12 +71,15 @@ function renderImages() {
         formEl.addEventListener('submit', function (event) {
             event.preventDefault()
             const comment = formEl.comment.value
-            createComment(comment).then(function (postFromServer) {
-                state.posts.push(postFromServer)
+
+            createComment(comment, post.id).then(function (postFromServer) {
+                post.comments.push(postFromServer)
                 render()
                 formEl.reset()
             })
         })
+
+
         divEl.append(spanEl, buttonEl)
         articleEl.append(removePost, h2El, imgEl, divEl, ulEl, formEl)
         imageSection.append(articleEl)
@@ -119,12 +125,12 @@ function createComment(content, imageId) {
     })
 }
 
+
+function render() {
+    renderImages()
+}
 getPost().then(function (postFromServer) {
     state.posts = postFromServer
     render()
 })
-function render() {
-    renderImages()
-}
-
 render()
