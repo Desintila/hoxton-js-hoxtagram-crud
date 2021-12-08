@@ -67,9 +67,8 @@ function renderImages() {
         formEl.append(inputEl, submitButtonEl)
         formEl.addEventListener('submit', function (event) {
             event.preventDefault()
-            const commentss = formEl.comment.value
-            const imageId = post.comments.imageId
-            createComment(commentss, imageId).then(function (postFromServer) {
+            const comment = formEl.comment.value
+            createComment(comment).then(function (postFromServer) {
                 state.posts.push(postFromServer)
                 render()
                 formEl.reset()
